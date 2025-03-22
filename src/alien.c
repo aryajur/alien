@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-#ifdef WIN32  
+#ifdef WIN32
 # ifndef WINDOWS
 #  define WINDOWS
 # endif
@@ -58,6 +58,8 @@
 #define LUA_COMPAT_ALL
 /* Lua 5.2 compatibility for Lua 5.3 */
 #define LUA_COMPAT_5_2
+/* Lua 5.3 compatibility for Lua 5.4 */
+#define LUA_COMPAT_APIINTCASTS
 
 #define MYNAME          "alien"
 #define MYVERSION       MYNAME " library for " LUA_VERSION " / " VERSION
@@ -66,8 +68,8 @@
 #include "lualib.h"
 #include "lauxlib.h"
 
-/* Lua 5.1 compatibility for Lua 5.3 */
-#if LUA_VERSION_NUM == 503
+/* Lua 5.1 compatibility for Lua 5.3 and Lua 5.4 */
+#if LUA_VERSION_NUM >= 503
 #define lua_objlen(L,i)		(lua_rawlen(L, (i)))
 #define luaL_register(L,n,l)	(luaL_newlib(L,l))
 #endif
@@ -1285,8 +1287,8 @@ int luaopen_alien_c(lua_State *L) {
   /* Register main library */
   luaL_register(L, "alien", alienlib);
   /* Version */
-  lua_pushliteral(L, MYVERSION);
-  lua_setfield(L, -2, "version");
+  lua_pushliteral(L, VERSION);
+  lua_setfield(L, -2, "_VERSION");
   /* Set platform */
   lua_pushliteral(L, PLATFORM);
   lua_setfield(L, -2, "platform");
